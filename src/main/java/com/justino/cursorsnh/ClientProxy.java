@@ -12,9 +12,10 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent event) {
         // Client-only stuff
         MinecraftForge.EVENT_BUS.register(new GuiLogger());
+        MinecraftForge.EVENT_BUS.register(new VirtualCursorRenderer());
     }
 
     public void refreshCursor() {
-        
+
     }
 }

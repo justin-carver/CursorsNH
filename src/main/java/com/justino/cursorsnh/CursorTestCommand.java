@@ -18,7 +18,28 @@ public class CursorTestCommand extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Cursor testing in progress!"));
+        if (args.length > 0 && args[0].equalsIgnoreCase("scale")) {
+            if (args.length < 2) {
+                sender.addChatMessage(new ChatComponentText("Usage: /cursortest scale <number>"));
+                return;
+            }
+            try {
+                Config.cursorScale = Float.parseFloat(args[1]);
+                sender.addChatMessage(new ChatComponentText("Scale set to " + Config.cursorScale));
+            } catch (NumberFormatException e) {
+                sender.addChatMessage(new ChatComponentText("Not a number: " + args[1]));
+            }
+            return;
+        }
+
+        if (args.length > 0 && args[0].equalsIgnoreCase("native")) {
+            Config.cursorNative = !Config.cursorNative;
+            sender.addChatMessage(new ChatComponentText("Native mode: " + Config.cursorNative));
+            return;
+        }
+
+        // no args: load the test cursor
+        TexturePackLoader.loadSingleCursor("/assets/cursorsnh/textures/DEV-not_allowed.png", 0, 0);
     }
 
     @Override
