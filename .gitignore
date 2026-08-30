@@ -37,4 +37,4 @@ addon.late.local.gradle.kts
 layout.json
 
 # Custom
-/src/main/resources/assets/cursorsnh/textures/DEV-*.png
+**/DEV-*.png
