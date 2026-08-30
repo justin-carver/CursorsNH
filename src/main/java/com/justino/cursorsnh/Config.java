@@ -1,4 +1,4 @@
-package com.myname.mymodid;
+package com.justino.cursorsnh;
 
 import java.io.File;
 
@@ -6,7 +6,7 @@ import net.minecraftforge.common.config.Configuration;
 
 public class Config {
 
-    public static String greeting = "Hello World";
+    public static String greeting = "Comin' to ya live from the mods folder!";
 
     public static void synchronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
