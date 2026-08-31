@@ -29,17 +29,29 @@ public class CursorTestCommand extends CommandBase {
             } catch (NumberFormatException e) {
                 sender.addChatMessage(new ChatComponentText("Not a number: " + args[1]));
             }
+            Config.save();
             return;
         }
 
         if (args.length > 0 && args[0].equalsIgnoreCase("native")) {
             Config.cursorNative = !Config.cursorNative;
+            Config.save();
             sender.addChatMessage(new ChatComponentText("Native mode: " + Config.cursorNative));
             return;
         }
 
         // no args: load the test cursor
-        TexturePackLoader.loadSingleCursor("/assets/cursorsnh/textures/DEV-not_allowed.png", 0, 0);
+        String name = args.length > 0 ? args[0] : "default";
+        CursorRegistry.Entry entry = CursorRegistry.get(name);
+
+        if (entry == null) {
+            sender.addChatMessage(new ChatComponentText("No cursor loaded: " + name));
+            return;
+        }
+
+        CursorManager.setCursor(entry.image, entry.xHot, entry.yHot);
+        sender.addChatMessage(new ChatComponentText("Set cursor: " + name));
+
     }
 
     @Override

@@ -10,12 +10,18 @@ public class Config {
     public static boolean cursorNative = false;   // false = draw the cursor in-game
     public static float cursorScale = 1.0f;
 
+    private static Configuration configuration;
+    private static File file;
+
     public static void synchronizeConfiguration(File configFile) {
-        Configuration configuration = new Configuration(configFile);
+        file = configFile;
+        configuration = new Configuration(configFile);
         configuration.load();
 
+        // Mod-related configs
         greeting = configuration.getString("greeting", Configuration.CATEGORY_GENERAL, greeting, "Script initialization lingo");
 
+        // Cursor-related configs
         cursorNative = configuration.getBoolean(
             "native",
             Configuration.CATEGORY_GENERAL,
@@ -30,8 +36,20 @@ public class Config {
             0.5D,
             8.0D).getDouble();
 
+        // Ship it!
         if (configuration.hasChanged()) {
-            configuration.save();
+            save();
         }
+    }
+
+    public static void save() {
+        // TODO: Let's make this extensible from the beginning... iterate over list/tuple?
+        configuration.get(Configuration.CATEGORY_GENERAL, "native", true).set(cursorNative);
+        configuration.get(Configuration.CATEGORY_GENERAL, "cursorScale", 1.0D).set((double) cursorScale);
+        configuration.save();
+    }
+
+    public static void reload() {
+        synchronizeConfiguration(file);
     }
 }

@@ -26,18 +26,20 @@ public class CursorNative {
             }
             current = next;
         } catch (LWJGLException e) {
-            e.printStackTrace();
+            CursorsNH.LOG.error("Could not set the cursor properly at all...", e);
         }
     }
 
     /** A 1x1 fully transparent cursor, to hide the OS pointer. */
+    // TODO: This seems to break pretty often, figure out a better way to do this.
     public static void setBlank() {
         try {
             IntBuffer blank = BufferUtils.createIntBuffer(1);
-            blank.put(0, 0x00000000);
+            blank.put(0, 0x00FFFFFF);
+            blank.position(0);
             Mouse.setNativeCursor(new Cursor(1, 1, 0, 0, 1, blank, null));
         } catch (LWJGLException e) {
-            e.printStackTrace();
+            CursorsNH.LOG.error("Attempt to setBlank failed! Could we create IntBuffer?", e);
         }
     }
 
@@ -57,7 +59,7 @@ public class CursorNative {
         try {
             Mouse.setNativeCursor(null);
         } catch (LWJGLException e) {
-            e.printStackTrace();
+            CursorsNH.LOG.error("Uh oh, couldn't reset the cursor back to native!", e);
         }
     }
 }

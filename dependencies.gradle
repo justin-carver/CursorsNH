@@ -35,4 +35,8 @@
  */
 dependencies {
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.69-GTNH:dev")
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.121-GTNH:dev")
+
+    // Going to lean hard into the MUI2 mixins
+    implementation("com.github.GTNewHorizons:ModularUI2:2.3.84-1.7.10:dev")
 }

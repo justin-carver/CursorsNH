@@ -5,6 +5,11 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
+/**
+ *  THIS IS ONLY A DEBUGGING CLASS.
+ *  SHOULD NOT BE ADDED INTO THE FINAL BUILD!!!
+ *  DON'T MIND THE MESS. :)
+ * */
 public class GuiLogger {
 
     @SubscribeEvent

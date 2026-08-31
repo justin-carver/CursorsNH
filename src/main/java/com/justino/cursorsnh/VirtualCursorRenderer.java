@@ -60,6 +60,7 @@ public class VirtualCursorRenderer {
         mc.getTextureManager().bindTexture(LOC);
 
         // Crisp pixels instead of blurry upscaling.
+        // TODO: Need to test this with larger screens. 2K, 4K, 8K, high-dpi, etc.
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 
