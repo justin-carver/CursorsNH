@@ -36,6 +36,7 @@ public class CursorTestCommand extends CommandBase {
         if (args.length > 0 && args[0].equalsIgnoreCase("native")) {
             Config.cursorNative = !Config.cursorNative;
             Config.save();
+            CursorManager.reapply();
             sender.addChatMessage(new ChatComponentText("Native mode: " + Config.cursorNative));
             return;
         }

@@ -18,8 +18,14 @@ public class CursorManager {
             VirtualCursorRenderer.hide();
             CursorNative.setCursorFromImage(image, xHot, yHot);
         } else {
-            CursorNative.reset();
             VirtualCursorRenderer.show(image, xHot, yHot);
+            CursorNative.hide();
+        }
+    }
+
+    public static void reapply() {
+        if (currentImage != null) {
+            setCursor(currentImage, currentXHot, currentYHot);
         }
     }
 

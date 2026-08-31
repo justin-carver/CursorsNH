@@ -10,40 +10,12 @@ import java.nio.IntBuffer;
 
 public class CursorNative {
 
+    private enum State { SYSTEM, CUSTOM, HIDDEN }
+    private static State state = State.SYSTEM;
     private static Cursor current;
+    private static Cursor blank;
 
-    public static void setCursor(int width, int height, int xHot, int yHot, IntBuffer argb) {
-        // TODO: Get this dynamically from ResourcePack
-        int yHotFromPack = 0; // Debug value for now.
-        int yHotShim = height - 1 - yHotFromPack;
-
-        try {
-            Cursor next = new Cursor(width, height, xHot, yHotShim, 1, argb, null);
-            Mouse.setNativeCursor(next);
-
-            if (current != null) {
-                current.destroy();
-            }
-            current = next;
-        } catch (LWJGLException e) {
-            CursorsNH.LOG.error("Could not set the cursor properly at all...", e);
-        }
-    }
-
-    /** A 1x1 fully transparent cursor, to hide the OS pointer. */
-    // TODO: This seems to break pretty often, figure out a better way to do this.
-    public static void setBlank() {
-        try {
-            IntBuffer blank = BufferUtils.createIntBuffer(1);
-            blank.put(0, 0x00FFFFFF);
-            blank.position(0);
-            Mouse.setNativeCursor(new Cursor(1, 1, 0, 0, 1, blank, null));
-        } catch (LWJGLException e) {
-            CursorsNH.LOG.error("Attempt to setBlank failed! Could we create IntBuffer?", e);
-        }
-    }
-
-    /** Takes a top-left-origin hotspot and handles the flip internally. */
+    /** Installs a pack cursor, replacing and destroying any previous one. */
     public static void setCursorFromImage(BufferedImage image, int xHot, int yHotTopLeft) {
         int w = image.getWidth(), h = image.getHeight();
         int[] argb = image.getRGB(0, 0, w, h, null, 0, w);
@@ -55,11 +27,68 @@ public class CursorNative {
         setCursor(w, h, xHot, h - 1 - yHotTopLeft, buf);
     }
 
+    /** Hide the OS pointer behind a fully transparent cursor. Safe to call repeatedly. */
+    public static void hide() {
+        if (state == State.HIDDEN) {
+            return;
+        }
+        Cursor b = blankCursor();
+        if (b == null) {
+            return;
+        }
+        try {
+            Mouse.setNativeCursor(b);
+            state = State.HIDDEN;
+        } catch (LWJGLException e) {
+            CursorsNH.LOG.error("Could not hide the OS native cursor!", e);
+        }
+    }
+
+    /** Restores the OS default pointer. Safe to call repeatedly. */
     public static void reset() {
+        if (state == State.SYSTEM) {
+            return;
+        }
         try {
             Mouse.setNativeCursor(null);
+            current.destroy();
+            current = null;
+            state = State.SYSTEM;
         } catch (LWJGLException e) {
-            CursorsNH.LOG.error("Uh oh, couldn't reset the cursor back to native!", e);
+            CursorsNH.LOG.error("Couldn't reset the cursor back to native!", e);
         }
+    }
+
+    /** Constructs Cursor parameters and assigns Cursor object manually */
+    private static void setCursor(int width, int height, int xHot, int yHot, IntBuffer argb) {
+        int yHotFromPack = 0; // Debug value for now.
+        int yHotShim = height - 1 - yHotFromPack;
+
+        try {
+            Cursor next = new Cursor(width, height, xHot, yHotShim, 1, argb, null);
+            Mouse.setNativeCursor(next);
+
+            if (current != null) {
+                current.destroy();
+            }
+            current = next;
+            state = State.CUSTOM;
+        } catch (LWJGLException e) {
+            CursorsNH.LOG.error("Could not set the cursor properly at all...", e);
+        }
+    }
+
+    /** 32x32 fully transparent cursor, created on first use. */
+    private static Cursor blankCursor() {
+        if (current != null) {
+            return blank;
+        }
+        try {
+            IntBuffer intBuff = BufferUtils.createIntBuffer(32*32);
+            blank = new Cursor(32, 32, 0, 0, 1, intBuff, null);
+        } catch (LWJGLException e) {
+            CursorsNH.LOG.error("Attempt to setBlank failed! Could we create IntBuffer?", e);
+        }
+        return null;
     }
 }

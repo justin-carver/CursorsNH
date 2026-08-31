@@ -30,8 +30,6 @@ public class VirtualCursorRenderer {
         xHot = xHotTopLeft;
         yHot = yHotTopLeft;
         visible = true;
-
-        CursorNative.setBlank();   // hide the OS cursor
     }
 
     public static void hide() {
@@ -59,14 +57,13 @@ public class VirtualCursorRenderer {
 
         mc.getTextureManager().bindTexture(LOC);
 
-        // Crisp pixels instead of blurry upscaling.
-        // TODO: Need to test this with larger screens. 2K, 4K, 8K, high-dpi, etc.
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT | GL11.GL_COLOR_BUFFER_BIT);
 
         GL11.glPushMatrix();
         GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_LIGHTING); // Resolves issues with "dark" cursors in inventory/chest GUI
         GL11.glEnable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1f, 1f, 1f, 1f);
         GL11.glTranslatef(0f, 0f, 500f);   // draw above everything
@@ -79,7 +76,7 @@ public class VirtualCursorRenderer {
         t.addVertexWithUV(x,     y,     0, 0, 0);
         t.draw();
 
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glPopMatrix();
+        GL11.glPopAttrib();
     }
 }
