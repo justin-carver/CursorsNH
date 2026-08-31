@@ -11,15 +11,7 @@ public class CommonProxy {
     // GameRegistry." (Remove if not needed)
     public void preInit(FMLPreInitializationEvent event) {
         Config.synchronizeConfiguration(event.getSuggestedConfigurationFile());
-
         CursorsNH.LOG.info(Config.greeting);
-        CursorsNH.LOG.info("CursorsNH currently loading in at via " + Tags.VERSION);
-        CursorsNH.LOG.info("What LWJGL version am I?: " + org.lwjgl.Sys.getVersion());
-        if (org.lwjgl.Sys.getVersion().charAt(0) == '3') {
-            CursorsNH.LOG.info("Running LWJGL3ify!");
-        } else {
-            CursorsNH.LOG.error("Something is missing... Are we running JDK 17+?");
-        }
     }
 
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes." (Remove if not needed)

@@ -52,7 +52,7 @@ public class CursorRegistry {
         CursorsNH.LOG.info("=== Cursor registry: " + entries.size() + " loaded ===");
         for (Map.Entry<String, Entry> e : entries.entrySet()) {
             Entry c = e.getValue();
-            CursorsNH.LOG.info(String.format(
+            CursorsNH.LOG.debug(String.format(
                 "  %-14s %dx%d  hot=(%d,%d)  frames=%d",
                 e.getKey(),
                 c.image.getWidth(), c.image.getHeight(),

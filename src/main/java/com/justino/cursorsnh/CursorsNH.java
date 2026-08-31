@@ -10,7 +10,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = CursorsNH.MODID, version = Tags.VERSION, name = "CursorsNH", acceptedMinecraftVersions = "[1.7.10]", acceptableRemoteVersions = "*")
+@Mod(modid = CursorsNH.MODID, version = Tags.VERSION, name = "CursorsNH", acceptedMinecraftVersions = "[1.7.10]", acceptableRemoteVersions = "*", dependencies = "required-after:lwjgl3ify@[3.0.0,);")
 public class CursorsNH {
 
     public static final String MODID = "cursorsnh";

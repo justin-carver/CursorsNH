@@ -3,6 +3,7 @@ package com.justino.cursorsnh;
 import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 public class Config {
 
@@ -13,6 +14,11 @@ public class Config {
     private static Configuration configuration;
     private static File file;
 
+    private static final float SCALE_MIN = 0.4f;
+    private static final float SCALE_MAX = 4.0f;
+    private static Property propNative;
+    private static Property propScale;
+
     public static void synchronizeConfiguration(File configFile) {
         file = configFile;
         configuration = new Configuration(configFile);
@@ -22,19 +28,11 @@ public class Config {
         greeting = configuration.getString("greeting", Configuration.CATEGORY_GENERAL, greeting, "Script initialization lingo");
 
         // Cursor-related configs
-        cursorNative = configuration.getBoolean(
-            "native",
-            Configuration.CATEGORY_GENERAL,
-            cursorNative,
-            "Use OS-level cursors. Disable to draw the cursor in-game (allows larger sizes/scales).");
+        propNative = configuration.get(Configuration.CATEGORY_GENERAL, "native", cursorNative, "Use OS-level cursors. Disable to draw the cursor in-game (allows larger sizes/scales).");
+        cursorNative = propNative.getBoolean();
 
-        cursorScale = (float) configuration.get(
-            Configuration.CATEGORY_GENERAL,
-            "scale",
-            1.0D,
-            "Cursor scale multiplier. Only fully effective when 'native' is false.",
-            0.5D,
-            8.0D).getDouble();
+        propScale = configuration.get(Configuration.CATEGORY_GENERAL, "scale", cursorScale, "Cursor scale multiplier. Only fully effective when 'native' is false.");
+        cursorScale = Math.clamp((float) propScale.getDouble(), SCALE_MIN, SCALE_MAX);
 
         // Ship it!
         if (configuration.hasChanged()) {
@@ -44,9 +42,10 @@ public class Config {
 
     public static void save() {
         // TODO: Let's make this extensible from the beginning... iterate over list/tuple?
-        configuration.get(Configuration.CATEGORY_GENERAL, "native", true).set(cursorNative);
-        configuration.get(Configuration.CATEGORY_GENERAL, "cursorScale", 1.0D).set((double) cursorScale);
+        propNative.set(cursorNative);
+        propScale.set(cursorScale);
         configuration.save();
+        reload(); // Load the immediate config to present any breaking changes.
     }
 
     public static void reload() {

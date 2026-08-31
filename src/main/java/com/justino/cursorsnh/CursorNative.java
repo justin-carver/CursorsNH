@@ -50,9 +50,11 @@ public class CursorNative {
             return;
         }
         try {
+            if (current != null) {
+                current.destroy();
+                current = null;
+            }
             Mouse.setNativeCursor(null);
-            current.destroy();
-            current = null;
             state = State.SYSTEM;
         } catch (LWJGLException e) {
             CursorsNH.LOG.error("Couldn't reset the cursor back to native!", e);
@@ -80,15 +82,15 @@ public class CursorNative {
 
     /** 32x32 fully transparent cursor, created on first use. */
     private static Cursor blankCursor() {
-        if (current != null) {
+        if (blank != null) {
             return blank;
         }
         try {
             IntBuffer intBuff = BufferUtils.createIntBuffer(32*32);
             blank = new Cursor(32, 32, 0, 0, 1, intBuff, null);
         } catch (LWJGLException e) {
-            CursorsNH.LOG.error("Attempt to setBlank failed! Could we create IntBuffer?", e);
+            CursorsNH.LOG.error("Failed to create transparent cursor.", e);
         }
-        return null;
+        return blank;
     }
 }

@@ -1,7 +1,6 @@
 package com.justino.cursorsnh;
 
-import net.minecraftforge.common.config.Configuration;
-
+import com.justino.cursorsnh.CursorRegistry.Entry;
 import java.awt.image.BufferedImage;
 
 public class CursorManager {
@@ -20,6 +19,16 @@ public class CursorManager {
         } else {
             VirtualCursorRenderer.show(image, xHot, yHot);
             CursorNative.hide();
+        }
+    }
+
+    /** Check if a cursor pack is loaded, and does it have a default cursor */
+    public static void applyDefault() {
+        Entry entry = CursorRegistry.get("default");
+        if (entry == null) {
+            reset();
+        } else {
+            setCursor(entry.image, entry.xHot, entry.yHot);
         }
     }
 
